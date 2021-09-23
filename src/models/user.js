@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema({
     },
     agencyId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"Agency"
+        ref:"User"
     },
     code:{
         type:String,
@@ -95,17 +95,6 @@ const userSchema = new mongoose.Schema({
     },diamonds:{
         type:Number,
         default:0
-    },vipExpire:{
-        type:Date
-    },freeMessage:{
-        counter:{
-            type:Number,
-            require:true,
-            default:10,
-        },
-        date:{
-            type:Date
-        }
     },accessToken:{
         type:String,
     },fcmToken:{
@@ -134,15 +123,7 @@ const userSchema = new mongoose.Schema({
           type:Number,
           default:1
        }
-  }],photoList:[{
-          url:{
-              type:String
-          },
-          status:{
-            type:Number,
-            default:1
-         }
-    }]
+  }]
 },{
     timestamps:true,
     toJSON:{
@@ -168,33 +149,12 @@ userSchema.virtual('agency',{
     foreignField:'_id'
 })
 
-// userSchema.virtual('vip').get(function(){
-//     const user = this
-//     const date = new Date()
-//     if(user.vipExpire){
-//         expireDate = new Date(user.vipExpire)
-//             if(expireDate >= date){
-//                 return true
-//            }
-//     }
-
-//     return false
-// })
-
 
 userSchema.methods.toJSON = function(){
     const user = this
     const userObject = user.toObject()
     delete userObject.password
     delete userObject.accessToken
-    userObject.vip = false
-    const date = new Date()
-    if(user.vipExpire){
-        expireDate = new Date(user.vipExpire)
-            if(expireDate >= date){
-                userObject.vip = true
-            }
-    }
     return userObject
 }
 
